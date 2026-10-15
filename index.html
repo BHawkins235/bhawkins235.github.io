@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fdfbf7">
+  <title>For Maddie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Arizonia&family=Cinzel+Decorative:wght@400;700&family=Story+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Click-away layer that folds the letter back up while reading -->
+  <button class="scrim" id="scrim" tabindex="-1" aria-label="Fold the letter away"></button>
+
+  <main class="scene">
+    <div class="stage" id="stage">
+
+      <!-- envelope back -->
+      <div class="env-back"></div>
+
+      <!-- flap: closed it covers the top, opened it folds up and back -->
+      <svg class="flap" viewBox="0 0 288 113" width="288" height="113" aria-hidden="true">
+        <polygon class="flap-fill" points="10,0 278,0 285,7 146.5,113 2,7"/>
+        <polyline class="line" points="2,7 146.5,113 285,7"/>
+      </svg>
+
+      <!-- the letter -->
+      <div class="page-clip">
+        <article class="page" id="page" aria-label="Your birthday letter">
+          <div class="page-inner">
+            <!-- ✏️ EDIT THE LETTER HERE.  The first word is "The" = drop cap "T" + "he". -->
+            <p class="line-1"><span class="cap">T</span><span class="cap-rest">he</span> world got a little brighter the day you were born, Maddie, and every year since, you've kept proving it.</p>
+            <p>I hope today is packed with cake, laughter, and all the people who love you most. Thank you for being exactly who you are.</p>
+            <p>Happy Birthday!</p>
+            <p class="sign">With all my love</p>
+          </div>
+        </article>
+      </div>
+
+      <!-- front pocket of the envelope (only visible once opened) -->
+      <svg class="front" viewBox="0 0 288 176" width="288" height="176" aria-hidden="true">
+        <defs><clipPath id="round"><rect width="288" height="176" rx="10"/></clipPath></defs>
+        <g clip-path="url(#round)">
+          <polygon class="front-fill" points="1,54 147,163 287,54 288,176 0,176"/>
+          <polyline class="line" points="1,54 147,163 287,54"/>
+        </g>
+      </svg>
+
+      <!-- "Happy Birthday!" bent under the seal -->
+      <svg class="caption" viewBox="0 0 288 176" width="288" height="176" aria-hidden="true">
+        <defs><path id="arc" d="M 97.5 100 A 47 47 0 0 0 191.5 100"/></defs>
+        <text><textPath href="#arc" startOffset="50%" text-anchor="middle">Happy Birthday!</textPath></text>
+      </svg>
+
+      <!-- THE SEAL — click it -->
+      <button class="seal" id="seal" type="button" aria-label="Break the wax seal to open the letter">
+        <svg viewBox="0 0 90 90" width="90" height="90" aria-hidden="true">
+          <defs>
+            <radialGradient id="wax" cx="38%" cy="32%" r="75%">
+              <stop offset="0" stop-color="#9b1a16"/>
+              <stop offset=".55" stop-color="#710c0a"/>
+              <stop offset="1" stop-color="#470605"/>
+            </radialGradient>
+            <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="7" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="5"/>
+            </filter>
+            <clipPath id="clipL"><polygon points="0,0 44,0 47,12 42,24 48,36 43,48 47,60 44,72 46,90 0,90"/></clipPath>
+            <clipPath id="clipR"><polygon points="44,0 90,0 90,90 46,90 44,72 47,60 43,48 48,36 42,24 47,12"/></clipPath>
+            <g id="sealArt">
+              <ellipse cx="45" cy="45" rx="37.5" ry="35" fill="url(#wax)" filter="url(#rough)"/>
+              <ellipse cx="45" cy="45" rx="30.5" ry="28" fill="none" stroke="#3a0302" stroke-width="1"/>
+              <ellipse cx="45.6" cy="45.8" rx="30.5" ry="28" fill="none" stroke="#c2504a" stroke-opacity=".28" stroke-width=".8"/>
+              
+              <text x="47" y="52" font-family="var(--manufacturing)" font-size="25px" transform="translate(-50%, -50%)" letter-spacing="2px" text-anchor="middle" class="mono" fill="#380401">MT </text>
+            </g>
+          </defs>
+          <g class="half left"  clip-path="url(#clipL)"><use href="#sealArt"/></g>
+          <g class="half right" clip-path="url(#clipR)"><use href="#sealArt"/></g>
+        </svg>
+      </button>
+    </div>
+
+    <p class="hint" id="hint" aria-live="polite">Tap the seal</p>
+    <button class="again" id="again" type="button" hidden>Seal it again</button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

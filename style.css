@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Manufacturing+Consent&display=swap');
+
+/* Colours & sizes taken from the Penpot file (Maddie_Birthday) */
+:root {
+  --paper:      #faf9f7;   /* letter page */
+  --env:        #b08f64;   /* envelope */
+  --env-inner:  #a3825a;   /* underside of the opened flap */
+  --env-line:   #4e341a;   /* fold lines */
+  --ink:        #3a463d;   /* "Happy Birthday!" + letter text */
+  --bg:         #fdfbf7;
+  --k: 1;                  /* scale, set from script.js */
+
+  --script: "Story Script", "Segoe Script", cursive;
+  --ornate: "Arizonia", cursive;
+  --manufacturing: "Manufacturing Consent", cursive;
+  /* Penpot used "Ornamental Versals" (a custom font). Falls back to a similar free one. */
+  --versal: "Ornamental Versals", "Cinzel Decorative", Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background:
+    radial-gradient(ellipse at 50% 38%, #ffffff 0%, var(--bg) 55%, #f3ece0 100%);
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scene {
+  position: relative;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- stage: the 288 × 176 envelope from the design ---------- */
+.stage {
+  position: relative;
+  width: 288px;
+  height: 176px;
+  transform: scale(var(--k));
+  perspective: 700px;
+  z-index: 2;
+}
+.stage > * { position: absolute; }
+
+.line { fill: none; stroke: var(--env-line); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* envelope back */
+.env-back {
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.07)), var(--env);
+  border-radius: 10px;
+  box-shadow: 0 16px 24px -12px rgba(78, 52, 26, .5), 0 2px 4px rgba(78, 52, 26, .25);
+  transition: opacity .6s ease;
+}
+
+
+.flap {
+  left: 0; top: 0;
+  z-index: 6;
+  overflow: visible;
+  transform-origin: 50% 0;
+  transition: transform .9s cubic-bezier(.5, 0, .2, 1), z-index 0s .45s, opacity .6s ease;
+  filter: drop-shadow(0 3px 3px rgba(60, 35, 10, .22));
+}
+.flap-fill { fill: var(--env); transition: fill .9s ease; }
+.stage.flapped .flap { transform: rotateX(180deg); z-index: -1; filter: none; top: 15px; } 
+.stage.flapped .flap-fill { fill: var(--env-inner); }
+
+
+.page-clip {
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+ 
+  clip-path: inset(-700px -700px 0 -700px);
+  transition: clip-path .8s ease;
+}
+.page {
+  position: absolute;
+  left: 34.5px; top: 40px;
+  width: 219px; height: 244px;
+  background: var(--paper);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(60, 40, 15, .25), 0 8px 18px rgba(60, 40, 15, .18);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: top 1.1s cubic-bezier(.2, .8, .2, 1), left .9s ease, width .9s ease, height .9s ease,
+              opacity .3s ease;
+}
+.page-inner {
+  height: 100%;
+  padding: 18px 18px 22px;
+  font-family: var(--script);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow: hidden;
+  transition: font-size .9s ease;
+}
+.page-inner p { margin: 0 0 .65em; }
+.cap {
+  float: left;
+  font-family: var(--versal);
+  font-size: 50px;
+  line-height: .86;
+  margin: 2px 3px 0 0;
+  color: #000;
+}
+.cap-rest {
+  font-family: var(--versal);
+  font-size: 25px;
+  text-transform: lowercase;
+  color: #000;
+}
+.sign { margin-top: 1em; font-family: var(--ornate); font-size: 1.5em; letter-spacing: .04em; }
+
+.stage.open .page { top: -85px; opacity: 1; cursor: pointer; pointer-events: auto; }
+.stage.open .page:hover { transform: translateY(-3px); }
+.page { transition-property: top, left, width, height, opacity, transform; }
+
+
+.front {
+  left: 0; top: 0;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 -2px 3px rgba(40, 22, 5, .28));
+  transition: opacity .35s ease;
+}
+.front-fill { fill: var(--env); }
+.stage.open .front { opacity: 1; }
+
+/* "Happy Birthday!" */
+.caption {
+  left: 0; top: 0;
+  z-index: 8;
+  overflow: visible;
+  pointer-events: none;
+  font-family: var(--script);
+  font-size: 15px;
+  letter-spacing: 2px;
+  fill: var(--ink);
+  transition: transform 1.1s cubic-bezier(.2, .8, .2, 1), opacity .6s ease;
+}
+.stage.open .caption { opacity: .5; transform: translateY(40px); }
+.stage.open .caption  { text-decoration: straight; }
+
+/* ----------  the seal ---------- */
+.seal {
+  left: 99.5px; top: 53px;       /* centres the 90px art on (144.5, 98) like the design */
+  width: 90px; height: 90px;
+  z-index: 9;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform .2s ease;
+  filter: drop-shadow(0 3px 3px rgba(40, 5, 3, .45));
+}
+.seal svg { display: block; overflow: visible; }
+.seal .mono { font-family: var(--manufacturing); font-size: 20px; letter-spacing: 4px; }
+.seal:hover  { transform: scale(1.07) rotate(-2deg); }
+.seal:active { transform: scale(.95); }
+.seal:focus-visible { outline: 2px dashed var(--env-line); outline-offset: 2px; }
+
+
+.half { transform-box: fill-box; transform-origin: center; transition: transform .8s cubic-bezier(.3, .7, .3, 1), opacity .8s ease; }
+.stage.broken .seal { pointer-events: none; }
+.stage.broken .seal::after { display: none; }
+.stage.broken .half.left  { transform: translate(-16px, 16px) rotate(-24deg); opacity: 0; }
+.stage.broken .half.right { transform: translate(16px, 22px)  rotate(20deg);  opacity: 0; }
+
+/* ---------- reading: letter grows, envelope fades away ---------- */
+.stage.reading .env-back,
+.stage.reading .flap,
+.stage.reading .front,
+.stage.reading .caption { opacity: 0; pointer-events: none; }
+.stage.reading .page-clip { clip-path: inset(-900px -900px -900px -900px); }
+.stage.reading .page {
+  left: 9px; top: -127px;
+  width: 270px; height: 430px;
+  cursor: auto;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(60, 40, 15, .25), 0 18px 40px rgba(60, 40, 15, .25);
+}
+.stage.reading .page-inner { font-size: 17px; padding: 24px 24px 28px; overflow-y: auto; }
+
+.scrim {
+  position: fixed; inset: 0;
+  z-index: 1;
+  border: 0; padding: 0;
+  background: rgba(60, 40, 15, .0);
+  pointer-events: none;
+  transition: background .8s ease;
+}
+body.is-reading .scrim { pointer-events: auto; background: rgba(60, 40, 15, .10); cursor: pointer; }
+
+/* ---------- hint + reset ---------- */
+.hint, .again {
+  position: absolute;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: var(--script);
+  color: var(--ink);
+}
+.hint {
+  bottom: calc(env(safe-area-inset-bottom) + 64px);
+  margin: 0;
+  font-size: 15px;
+  opacity: .7;
+  transition: opacity .4s ease;
+}
+.hint.swap { opacity: 0; }
+.again {
+  bottom: calc(env(safe-area-inset-bottom) + 24px);
+  width: max-content;
+  margin: 0 auto;
+  padding: 6px 14px;
+  background: none;
+  border: 0;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: .65;
+  cursor: pointer;
+  z-index: 3;
+}
+.again:hover, .again:focus-visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01s !important; transition-delay: 0s !important; animation: none !important; }
+}
